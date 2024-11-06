@@ -7,87 +7,87 @@ import { ToggleEngine } from "./core/engine";
  * into a list of toggles that can be used with a client-side SDK
  */
 export const evaluateFlags = (
-  definitions: ClientFeaturesResponse,
-  context: Context = {}
+	definitions: ClientFeaturesResponse,
+	context: Context = {},
 ): {
-  toggles: IToggle[];
+	toggles: IToggle[];
 } => {
-  let engine: ToggleEngine;
-  try {
-    engine = new ToggleEngine(definitions);
-  } catch (error) {
-    console.error(
-      "Unleash: Failed to evaluate flags from provided definitions",
-      error
-    );
-    return { toggles: [] };
-  }
+	let engine: ToggleEngine;
+	try {
+		engine = new ToggleEngine(definitions);
+	} catch (error) {
+		console.error(
+			"Unleash: Failed to evaluate flags from provided definitions",
+			error,
+		);
+		return { toggles: [] };
+	}
 
-  const defaultContext: Context = {
-    currentTime: new Date(),
-    appName:
-      process.env.UNLEASH_APP_NAME || process.env.NEXT_PUBLIC_UNLEASH_APP_NAME,
-  };
-  const contextWithDefaults = {
-    ...defaultContext,
-    ...context,
-  };
+	const defaultContext: Context = {
+		currentTime: new Date(),
+		appName:
+			process.env.UNLEASH_APP_NAME || process.env.NEXT_PUBLIC_UNLEASH_APP_NAME,
+	};
+	const contextWithDefaults = {
+		...defaultContext,
+		...context,
+	};
 
-  const features = definitions?.features?.map((feature) => {
-    const variant = engine.getValue(feature.name, contextWithDefaults);
+	const features = definitions?.features?.map((feature) => {
+		const variant = engine.getValue(feature.name, contextWithDefaults);
 
-    return {
-      name: feature.name,
-      enabled: Boolean(variant),
-      impressionData: Boolean(feature.impressionData),
-      variant: variant || { enabled: false, name: "disabled" },
-      dependencies: feature.dependencies,
-    };
-  });
+		return {
+			name: feature.name,
+			enabled: Boolean(variant),
+			impressionData: Boolean(feature.impressionData),
+			variant: variant || { enabled: false, name: "disabled" },
+			dependencies: feature.dependencies,
+		};
+	});
 
-  const toggles = features
-    .filter((feature) => {
-      if (feature.enabled === false) return false;
+	const toggles = features
+		.filter((feature) => {
+			if (feature.enabled === false) return false;
 
-      if (!feature?.dependencies?.length) return true;
+			if (!feature?.dependencies?.length) return true;
 
-      return feature.dependencies.every((dependency) => {
-        const parentToggle = features.find(
-          (toggle) => toggle.name === dependency.feature
-        );
+			return feature.dependencies.every((dependency) => {
+				const parentToggle = features.find(
+					(toggle) => toggle.name === dependency.feature,
+				);
 
-        if (!parentToggle)
-          console.warn(
-            `Unleash: \`${feature.name}\` has unresolved dependency \`${dependency.feature}\`.`
-          );
+				if (!parentToggle)
+					console.warn(
+						`Unleash: \`${feature.name}\` has unresolved dependency \`${dependency.feature}\`.`,
+					);
 
-        if (parentToggle?.dependencies?.length) {
-          console.warn(
-            `Unleash: \`${feature.name}\` cannot depend on \`${dependency.feature}\` which also has dependencies.`
-          );
-          return false;
-        }
+				if (parentToggle?.dependencies?.length) {
+					console.warn(
+						`Unleash: \`${feature.name}\` cannot depend on \`${dependency.feature}\` which also has dependencies.`,
+					);
+					return false;
+				}
 
-        if (parentToggle?.enabled && dependency.enabled === false) return false;
-        if (!parentToggle?.enabled && dependency.enabled !== false)
-          return false;
+				if (parentToggle?.enabled && dependency.enabled === false) return false;
+				if (!parentToggle?.enabled && dependency.enabled !== false)
+					return false;
 
-        if (
-          dependency.variants?.length &&
-          (!parentToggle?.variant.name ||
-            !dependency.variants.includes(parentToggle.variant.name))
-        )
-          return false;
+				if (
+					dependency.variants?.length &&
+					(!parentToggle?.variant.name ||
+						!dependency.variants.includes(parentToggle.variant.name))
+				)
+					return false;
 
-        return true;
-      });
-    })
-    .map((feature) => ({
-      name: feature.name,
-      enabled: feature.enabled,
-      variant: { ...feature.variant, feature_enabled: feature.enabled },
-      impressionData: feature.impressionData,
-    }));
+				return true;
+			});
+		})
+		.map((feature) => ({
+			name: feature.name,
+			enabled: feature.enabled,
+			variant: { ...feature.variant, feature_enabled: feature.enabled },
+			impressionData: feature.impressionData,
+		}));
 
-  return { toggles };
+	return { toggles };
 };
