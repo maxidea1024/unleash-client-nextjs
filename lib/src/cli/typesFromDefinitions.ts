@@ -5,25 +5,24 @@ export const typesFromDefinitions = (definitions: ClientFeaturesResponse) => {
 
   const featureVariants = features.length
     ? "export type FeaturesVariantMap = {" +
-      features
-        .map(({ name, variants }) => {
-          if (!variants?.length) {
-            return `\n  "${name}": [{ "name": "disabled", "enabled": false }]`;
-          }
+    features
+      .map(({ name, variants }) => {
+        if (!variants?.length) {
+          return `\n  "${name}": [{ "name": "disabled", "enabled": false }]`;
+        }
 
-          return `\n  "${name}": [${variants
-            ?.map(
-              (variant) =>
-                `${variants.length > 1 ? "\n    " : ""}{ "name": "${
-                  variant.name
-                }"; "enabled": true; "payload": ${JSON.stringify(
-                  variant.payload
-                )} }`
-            )
-            .join(" |")}]`;
-        })
-        .join(",") +
-      "\n};"
+        return `\n  "${name}": [${variants
+          ?.map(
+            (variant) =>
+              `${variants.length > 1 ? "\n    " : ""}{ "name": "${variant.name
+              }"; "enabled": true; "payload": ${JSON.stringify(
+                variant.payload
+              )} }`
+          )
+          .join(" |")}]`;
+      })
+      .join(",") +
+    "\n};"
     : "export type FeaturesVariantMap = {};";
 
   return `${featureVariants}

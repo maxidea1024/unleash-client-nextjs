@@ -110,7 +110,7 @@ describe("getDefaultClientConfig", () => {
   it("should use warn about using NEXT_PUBLIC_UNLEASH_SERVER_API_TOKEN", () => {
     vi.stubEnv("NEXT_PUBLIC_UNLEASH_SERVER_API_TOKEN", "insecure-token");
 
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => { });
 
     expect(getDefaultClientConfig()).toEqual({
       url: "http://localhost:4242/api/frontend",

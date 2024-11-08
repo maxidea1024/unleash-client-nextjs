@@ -30,6 +30,7 @@ function getSeed(context: Context, stickiness: string = "default"): string {
     const value = resolveContextValue(context, stickiness);
     return value ? value.toString() : randomString();
   }
+
   let result;
   stickinessSelectors.some((key: string): boolean => {
     const value = context[key];
@@ -39,6 +40,7 @@ function getSeed(context: Context, stickiness: string = "default"): string {
     }
     return false;
   });
+
   return result || randomString();
 }
 
@@ -70,6 +72,7 @@ export function selectVariantDefinition(
   if (totalWeight <= 0) {
     return null;
   }
+
   const variantOverride = findOverride(variants, context);
   if (variantOverride) {
     return variantOverride;
@@ -88,13 +91,17 @@ export function selectVariantDefinition(
       if (v.weight === 0) {
         return undefined;
       }
+
       counter += v.weight;
+
       if (counter < target) {
         return undefined;
       }
+
       return v;
     }
   );
+
   return variant || null;
 }
 

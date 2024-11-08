@@ -22,9 +22,11 @@ export function resolveContextValue(context: Context, field: string): string | u
   if (context[field]) {
     return context[field] as string;
   }
+
   if (context.properties && context.properties[field]) {
     return context.properties[field] as string;
   }
+
   return undefined;
 }
 
@@ -36,6 +38,7 @@ export function generateInstanceId(instanceId?: string): string {
   if (instanceId) {
     return instanceId;
   }
+  
   // let info;
   // try {
   //   info = userInfo();

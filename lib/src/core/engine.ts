@@ -23,6 +23,7 @@ function processFeatures(
       processedFeatures.set(feature.name, feature);
     });
   }
+
   return processedFeatures;
 }
 
@@ -35,6 +36,7 @@ function processSegments(
       processedSegments.set(segment.id, segment);
     });
   }
+
   return processedSegments;
 }
 
@@ -63,12 +65,15 @@ export class ToggleEngine {
     if (strategy.constraints) {
       yield* strategy.constraints;
     }
+
     const segments = strategy.segments?.map((segmentId) =>
       this.segments.get(segmentId)
     );
+
     if (!segments) {
       return;
     }
+
     yield* this.yieldSegmentConstraints(segments);
   }
 
@@ -81,6 +86,7 @@ export class ToggleEngine {
         constraints.push(undefined);
       }
     }
+
     return constraints;
   }
 
@@ -99,6 +105,7 @@ export class ToggleEngine {
         if (!strategy) {
           return false;
         }
+
         const constraints = this.yieldConstraintsFor(strategySelector);
         const result = strategy.getResult(
           strategySelector.parameters,
@@ -111,9 +118,11 @@ export class ToggleEngine {
           strategyVariant = result.variant;
           return true;
         }
+
         return false;
       }
     );
+
     if (strategyVariant) {
       return strategyVariant;
     }

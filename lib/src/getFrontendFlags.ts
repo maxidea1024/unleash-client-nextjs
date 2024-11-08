@@ -28,9 +28,9 @@ export const getFrontendFlags = async (
         error:
           | Error
           | {
-              type: "HttpError";
-              code: number;
-            }
+            type: "HttpError";
+            code: number;
+          }
           | unknown
       ) => {
         reject(error);

@@ -4,7 +4,7 @@ import { getDefaultClientConfig, getServerBaseUrl } from "./utils";
 const getMetricsConfig = () => {
   const serverUrl = getServerBaseUrl()
 
-  if (serverUrl && process.env.UNLEASH_SERVER_API_TOKEN){
+  if (serverUrl && process.env.UNLEASH_SERVER_API_TOKEN) {
     return {
       ...getDefaultClientConfig(),
       url: serverUrl,
@@ -28,8 +28,8 @@ export const flagsClient = (toggles = [] as IToggle[]) => {
     disableRefresh: true,
     bootstrapOverride: true,
     storageProvider: {
-      get: async (_name: string) => {},
-      save: async (_name: string, _value: string) => {},
+      get: async (_name: string) => { },
+      save: async (_name: string, _value: string) => { },
     },
   });
 

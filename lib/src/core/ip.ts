@@ -92,9 +92,8 @@ const ip = {
   },
 
   fromLong: function (ipl: number) {
-    return `${ipl >>> 24}.${(ipl >> 16) & 255}.${(ipl >> 8) & 255}.${
-      ipl & 255
-    }`;
+    return `${ipl >>> 24}.${(ipl >> 16) & 255}.${(ipl >> 8) & 255}.${ipl & 255
+      }`;
   },
 
   subnet: function (addr: any, mask: any) {

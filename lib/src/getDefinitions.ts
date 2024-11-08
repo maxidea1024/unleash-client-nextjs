@@ -15,7 +15,7 @@ type FetchOptions = RequestInit & {
 export const getDefaultConfig = (defaultAppName = "nextjs") => {
   const baseUrl = removeTrailingSlash(
     process.env.UNLEASH_SERVER_API_URL ||
-      process.env.NEXT_PUBLIC_UNLEASH_SERVER_API_URL
+    process.env.NEXT_PUBLIC_UNLEASH_SERVER_API_URL
   );
 
   const envToken = process.env.UNLEASH_SERVER_API_TOKEN;

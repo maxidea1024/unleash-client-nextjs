@@ -13,19 +13,9 @@ export default class FlexibleRolloutStrategy extends Strategy {
 
   constructor(radnomGenerator?: Function) {
     super('flexibleRollout');
+
     if (radnomGenerator) {
       this.randomGenerator = radnomGenerator;
-    }
-  }
-
-  resolveStickiness(stickiness: string, context: Context): any {
-    switch (stickiness) {
-      case STICKINESS.default:
-        return context.userId || context.sessionId || this.randomGenerator();
-      case STICKINESS.random:
-        return this.randomGenerator();
-      default:
-        return resolveContextValue(context, stickiness);
     }
   }
 
@@ -38,7 +28,19 @@ export default class FlexibleRolloutStrategy extends Strategy {
     if (!stickinessId) {
       return false;
     }
+
     const normalizedUserId = normalizedValue(stickinessId, groupId);
     return percentage > 0 && normalizedUserId <= percentage;
+  }
+
+  resolveStickiness(stickiness: string, context: Context): any {
+    switch (stickiness) {
+      case STICKINESS.default:
+        return context.userId || context.sessionId || this.randomGenerator();
+      case STICKINESS.random:
+        return this.randomGenerator();
+      default:
+        return resolveContextValue(context, stickiness);
+    }
   }
 }

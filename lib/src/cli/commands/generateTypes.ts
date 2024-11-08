@@ -35,7 +35,7 @@ export const generateTypes = (program: Command) => {
     .summary("Generate types and typed functions from feature flags.")
     .description(
       "Generate types and typed functions from feature flags defined in an Unleash instance. " +
-        "It will also generate strictly typed versions of `useFlag`, `useVariant`, `useFlags` and `flagsClient` (unless `--typesOnly` is used)."
+      "It will also generate strictly typed versions of `useFlag`, `useVariant`, `useFlags` and `flagsClient` (unless `--typesOnly` is used)."
     )
     .argument("<file>", "output file name (e.g. `./generated/unleash.ts`)")
     .option(

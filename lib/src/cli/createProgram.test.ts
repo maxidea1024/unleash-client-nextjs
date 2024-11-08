@@ -85,7 +85,7 @@ describe("createProgram", () => {
   });
 
   test("preSubcommand hook should load environment variables", async () => {
-    program.command("sub").action(async () => {});
+    program.command("sub").action(async () => { });
     await program.parseAsync(["sub"], { from: "user" });
 
     expect(vi.mocked(loadEnvConfig)).toHaveBeenCalledOnce();

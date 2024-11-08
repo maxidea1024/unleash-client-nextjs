@@ -91,6 +91,7 @@ const StringOperator = (constraint: Constraint, context: Context) => {
   if (operator === Operator.STR_CONTAINS) {
     return values.some((val) => contextValue?.includes(val));
   }
+
   return false;
 };
 
@@ -112,9 +113,10 @@ const SemverOperator = (constraint: Constraint, context: Context) => {
     if (operator === Operator.SEMVER_GT) {
       return semverGt(contextValue, value);
     }
-  } catch (e) {
+  } catch (error: unknown) {
     return false;
   }
+
   return false;
 };
 
@@ -131,6 +133,7 @@ const DateOperator = (constraint: Constraint, context: Context) => {
   if (operator === Operator.DATE_BEFORE) {
     return currentTime < value;
   }
+
   return false;
 };
 
@@ -159,6 +162,7 @@ const NumberOperator = (constraint: Constraint, context: Context) => {
   if (operator === Operator.NUM_LTE) {
     return contextValue <= value;
   }
+
   return false;
 };
 
@@ -220,6 +224,7 @@ export class Strategy {
         return false;
       }
     }
+
     return true;
   }
 
@@ -258,15 +263,16 @@ export class Strategy {
         variants,
         context
       );
+
       return variantDefinition
         ? {
+          enabled: true,
+          variant: {
+            name: variantDefinition.name,
             enabled: true,
-            variant: {
-              name: variantDefinition.name,
-              enabled: true,
-              payload: variantDefinition.payload,
-            },
-          }
+            payload: variantDefinition.payload,
+          },
+        }
         : { enabled: true };
     }
 
